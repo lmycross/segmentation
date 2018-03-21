@@ -3,6 +3,7 @@ import torch.nn.functional as F
 import numpy as np
 import torch
 
+# https://github.com/shelhamer/fcn.berkeleyvision.org/blob/master/surgery.py
 def get_upsampling_weight(in_channels, out_channels, kernel_size):
     """Make a 2D bilinear kernel suitable for upsampling"""
     factor = (kernel_size + 1) // 2
@@ -102,14 +103,12 @@ class fcn32s(nn.Module):
         conv5 = self.conv_block5(conv4)
 
         score = self.classifier(conv5)
-
-       
+        
         out=self.upscore32(score)
         out = out[:, :, 19:19 + x.size()[2], 19:19 + x.size()[3]].contiguous()
         
             
         return out
-
 
     def init_vgg16_params(self, vgg16, copy_fc8=False):
         blocks = [self.conv_block1,
@@ -197,7 +196,6 @@ class fcn16s(nn.Module):
 
         score += score4
         
-        
         out=self.upscore16(score)
         out = out[:, :, 27:27 + x.size()[2], 27:27 + x.size()[3]].contiguous()
        
@@ -211,7 +209,6 @@ class fcn16s(nn.Module):
         self.conv_block4 = nn.Sequential(*list(fcn32.conv_block4.children()))
         self.conv_block5 = nn.Sequential(*list(fcn32.conv_block5.children()))
         self.classifier = nn.Sequential(*list(fcn32.classifier.children()))
-
 
 # FCN 8s
 class fcn8s(nn.Module):
@@ -257,8 +254,7 @@ class fcn8s(nn.Module):
                 initial_weight = get_upsampling_weight(
                     m.in_channels, m.out_channels, m.kernel_size[0])
                 m.weight.data.copy_(initial_weight)
-
-            
+      
     def forward(self, x):
         conv1 = self.conv_block1(x)
         conv2 = self.conv_block2(conv1)
@@ -279,12 +275,10 @@ class fcn8s(nn.Module):
         score3 = score3[:,:,9:9+score.size()[2],9:9+score.size()[3]]
         score += score3
         
-        
         out= self.upscore8(score)
         out = out[:, :, 31:31 + x.size()[2], 31:31 + x.size()[3]].contiguous()
     
         return out
-
 
     def init_fcn16s_params(self, fcn16):
         
