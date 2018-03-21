@@ -81,7 +81,6 @@ class fcn32s(nn.Module):
         self.classifier[6].weight.data.zero_()
         self.classifier[6].bias.data.zero_()
                
-           
         self.upscore32 = nn.ConvTranspose2d(self.label_nbr, self.label_nbr, 64, stride=32, bias=False)
         
         if learned_billinear is False:
