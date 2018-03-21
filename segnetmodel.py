@@ -22,9 +22,9 @@ class conv2DBatchNormRelu(nn.Module):
         outputs = self.cbr_unit(inputs)
         return outputs
 
-class segnetDown2(nn.Module):
+class Down2(nn.Module):
     def __init__(self, in_size, out_size):
-        super(segnetDown2, self).__init__()
+        super(Down2, self).__init__()
         self.conv1 = conv2DBatchNormRelu(in_size, out_size, 3, 1, 1)
         self.conv2 = conv2DBatchNormRelu(out_size, out_size, 3, 1, 1)
         self.maxpool_with_argmax = nn.MaxPool2d(2, 2, return_indices=True)
@@ -37,9 +37,9 @@ class segnetDown2(nn.Module):
         return outputs, indices, unpooled_shape
 
 
-class segnetDown3(nn.Module):
+class Down3(nn.Module):
     def __init__(self, in_size, out_size):
-        super(segnetDown3, self).__init__()
+        super(Down3, self).__init__()
         self.conv1 = conv2DBatchNormRelu(in_size, out_size, 3, 1, 1)
         self.conv2 = conv2DBatchNormRelu(out_size, out_size, 3, 1, 1)
         self.conv3 = conv2DBatchNormRelu(out_size, out_size, 3, 1, 1)
@@ -54,9 +54,9 @@ class segnetDown3(nn.Module):
         return outputs, indices, unpooled_shape
 
 
-class segnetUp2(nn.Module):
+class Up2(nn.Module):
     def __init__(self, in_size, out_size):
-        super(segnetUp2, self).__init__()
+        super(Up2, self).__init__()
         self.unpool = nn.MaxUnpool2d(2, 2)
         self.conv1 = conv2DBatchNormRelu(in_size, in_size, 3, 1, 1)
         self.conv2 = conv2DBatchNormRelu(in_size, out_size, 3, 1, 1)
@@ -68,9 +68,9 @@ class segnetUp2(nn.Module):
         return outputs
 
 
-class segnetUp3(nn.Module):
+class Up3(nn.Module):
     def __init__(self, in_size, out_size):
-        super(segnetUp3, self).__init__()
+        super(Up3, self).__init__()
         self.unpool = nn.MaxUnpool2d(2, 2)
         self.conv1 = conv2DBatchNormRelu(in_size, in_size, 3, 1, 1)
         self.conv2 = conv2DBatchNormRelu(in_size, in_size, 3, 1, 1)
@@ -91,17 +91,17 @@ class segnet(nn.Module):
         self.in_channels = in_channels
         self.is_unpooling = is_unpooling
 
-        self.down1 = segnetDown2(self.in_channels, 64)
-        self.down2 = segnetDown2(64, 128)
-        self.down3 = segnetDown3(128, 256)
-        self.down4 = segnetDown3(256, 512)
-        self.down5 = segnetDown3(512, 512)
+        self.down1 = Down2(self.in_channels, 64)
+        self.down2 = Down2(64, 128)
+        self.down3 = Down3(128, 256)
+        self.down4 = Down3(256, 512)
+        self.down5 = Down3(512, 512)
 
-        self.up5 = segnetUp3(512, 512)
-        self.up4 = segnetUp3(512, 256)
-        self.up3 = segnetUp3(256, 128)
-        self.up2 = segnetUp2(128, 64)
-        self.up1 = segnetUp2(64, label_nbr)
+        self.up5 = Up3(512, 512)
+        self.up4 = Up3(512, 256)
+        self.up3 = Up3(256, 128)
+        self.up2 = Up2(128, 64)
+        self.up1 = Up2(64, label_nbr)
 
     def forward(self, inputs):
 

@@ -83,7 +83,7 @@ class SegNetData(data.Dataset):
         
         transform1 = transforms.Compose([
                 transforms.ToTensor(), 
-                transforms.Normalize((0.41189488770418226, 0.4251328066237724, 0.432670702070482),(0.09429413169716905, 0.09710146421210114, 0.09438316332790314))
+                transforms.Normalize((0.41189488770418226, 0.4251328066237724, 0.432670702070482),(0.3070734955953852, 0.3116110784489235, 0.3072184293428751))
                 ])
         img=transform1(img)
         
