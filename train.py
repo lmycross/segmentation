@@ -1,4 +1,4 @@
-from load import SegNetData
+from load2 import Loaddata
 import torch.optim as optim
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
@@ -15,20 +15,20 @@ trainset="/mnt/iusers01/eee01/mchiwml4/CamVid/train"
 validset="/mnt/iusers01/eee01/mchiwml4/CamVid/val"
 testset="/mnt/iusers01/eee01/mchiwml4/CamVid/test"
 train_dataset = DataLoader(
-        SegNetData(trainset, is_transform=True),
+        Loaddata(trainset, is_transform=True),
         batch_size=2, shuffle=True, num_workers=4)
 valid_dataset = DataLoader(
-        SegNetData(validset, is_transform=True),
+        Loaddata(validset, is_transform=True),
         batch_size=1, shuffle=True, num_workers=4)
 test_dataset = DataLoader(
-        SegNetData(testset, is_transform=True),
+        Loaddata(testset, is_transform=True),
         batch_size=1, shuffle=True, num_workers=4)
 
 
 
-train_size = len(SegNetData(trainset))
-valid_size = len(SegNetData(validset))
-test_size = len(SegNetData(testset))
+train_size = len(Loaddata(trainset))
+valid_size = len(Loaddata(validset))
+test_size = len(Loaddata(testset))
     
 def get_1x_lr_params(model):
     """
@@ -222,15 +222,16 @@ def test_model(model, criterion):
 
 
 label_num=11
-model = fcnmodel.fcn16s(label_num)
-model.load_state_dict(torch.load('fcn16s-4/net_params40.pkl')) 
+model = fcnmodel.fcn32s(label_num)
+model.load_state_dict(torch.load('fcn32s-4/net_params20.pkl')) 
+model=model.cuda()
 #vgg16=models.vgg16(pretrained=True)
 #model.init_vgg16_params(vgg16)
 
 model_ft = fcnmodel.fcn8s(label_num,learned_billinear=True)
 model_ft.init_fcn16s_params(model)
 model_ft=model_ft.cuda()
-#model_ft.load_state_dict(torch.load('fcn8s-4/net_params20.pkl'))
+model_ft.load_state_dict(torch.load('fcn8s-5/net_params40.pkl'))
 
 weight = torch.Tensor([0.2595,0.1826,4.5640,0.1417,0.9051,0.3826,9.6446,1.8418,0.6823,6.2478,7.3614]).cuda()
 criterion = CrossEntropyLoss2d(weight=weight)
@@ -244,7 +245,7 @@ max_epochs = 20
 
 train_model(model_ft, criterion, optimizer, num_epochs=max_epochs)
  
-#test_model(model_ft, criterion)
+test_model(model, criterion)
 
 
 

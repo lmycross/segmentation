@@ -88,13 +88,13 @@ class Loaddata(data.Dataset):
                 transforms.Normalize((0.41189488770418226, 0.4251328066237724, 0.432670702070482),(0.3070734955953852, 0.3116110784489235, 0.3072184293428751))
                 ])
         
-        transform2 = transforms.Compose([
-                transforms.Resize((45,60)),
-                                ])
+        
         img = transform1(img)
-        lbl = transform2(lbl)        
+        #lbl = transform2(lbl)        
         
         lbl = torch.from_numpy(np.asarray(lbl)).long()
         return img, lbl
+
+
 
 

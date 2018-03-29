@@ -43,8 +43,10 @@ def decode_segmap(temp):
     return rgb
 
 truthimagedir='C:/Users/mchiwml4/github/SegNet-Tutorial/CamVid/testannot/Seq05VD_f05010.png'
+
 truth=np.asarray(Image.open(truthimagedir))
 truth = decode_segmap(truth)
+
 truth=np.uint8(truth)
 
 
