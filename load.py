@@ -92,7 +92,7 @@ class Loaddata(data.Dataset):
                 transforms.Resize((45,60)),
                                 ])
         img = transform1(img)
-        lbl = transform2(lbl)        
+        #lbl = transform2(lbl)        
         
         lbl = torch.from_numpy(np.asarray(lbl)).long()
         return img, lbl
