@@ -3,7 +3,7 @@ sys.path.append('../../')
 from datasets.camvid_loader import Loaddata, mean, std, MaskToTensor
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
-import models.tiramisu_nobias as tiramisu_nobias
+import models.fcdensenetmodel as fcdensenetmodel
 import numpy as np
 from utils.metrics import runningScore
 from torchvision import transforms
@@ -23,7 +23,7 @@ def main(test_args):
             batch_size=1, shuffle=False, num_workers=8)
     
     label_num=11
-    model = tiramisu_nobias.FCDenseNet103(label_num)
+    model = fcdensenetmodel.FCDenseNet103(label_num)
     model=model.cuda()
     model.load_state_dict(torch.load(test_args.load_param))
     model.eval()

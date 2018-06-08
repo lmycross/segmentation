@@ -4,7 +4,7 @@ from datasets.camvid_loader import Loaddata, class_weight, mean, std, MaskToTens
 import torch.optim as optim
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
-import models.tiramisu_nobias as tiramisu_nobias
+import models.fcdensenetmodel as fcdensenetmodel
 import torch
 import torch.nn.functional as F
 import numpy as np
@@ -172,7 +172,7 @@ def main(train_args):
         num_workers=8)
 
     label_num = 11
-    model = tiramisu_nobias.FCDenseNet103(label_num)
+    model = fcdensenetmodel.FCDenseNet103(label_num)
 
     model = model.cuda()
     weight = torch.Tensor(class_weight).cuda()
