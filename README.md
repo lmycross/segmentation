@@ -15,7 +15,7 @@ DUC-HDC: https://arxiv.org/abs/1702.08502
 
 GCN: https://arxiv.org/abs/1703.02719
 
-Tiramisu: https://arxiv.org/abs/1611.09326
+FC-DenseNet: https://arxiv.org/abs/1611.09326
 
 LinkNet: https://arxiv.org/abs/1707.03718
 
