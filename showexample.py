@@ -4,9 +4,8 @@ import matplotlib.pyplot as plt
 import torch
 from torchvision import transforms
 from torch.autograd import Variable
-import segnetmodel
+import tiramisu_nobias
 import imageio
-import fcnmodel
 
 
 def decode_segmap(temp):
@@ -42,7 +41,15 @@ def decode_segmap(temp):
 
     return rgb
 
-truthimagedir='C:/Users/mchiwml4/github/SegNet-Tutorial/CamVid/testannot/Seq05VD_f05010.png'
+label_num=11
+model = tiramisu_nobias.FCDenseNet103(label_num)
+model.load_state_dict(torch.load('C:/Users/mchiwml4/pycode/net-data/segmentation/camvid/tiramisu2/net_params65.pth'))  
+
+model=model
+model.eval()
+
+
+truthimagedir='C:/Users/mchiwml4/github/SegNet-Tutorial/CamVid/testannot/Seq05VD_f00660.png'
 
 truth=np.asarray(Image.open(truthimagedir))
 truth = decode_segmap(truth)
@@ -53,25 +60,19 @@ truth=np.uint8(truth)
 
 
 
-imagedir='C:/Users/mchiwml4/github/SegNet-Tutorial/CamVid/test/Seq05VD_f05010.png'
+imagedir='C:/Users/mchiwml4/github/SegNet-Tutorial/CamVid/test/Seq05VD_f00660.png'
 inputs = imageio.imread(imagedir)
 transform1 = transforms.Compose([
                 transforms.ToTensor(), 
-                transforms.Normalize((0.41189488770418226, 0.4251328066237724, 0.432670702070482),(0.09429413169716905, 0.09710146421210114, 0.09438316332790314))
+                transforms.Normalize((0.41189488770418226, 0.4251328066237724, 0.432670702070482),(0.3070734955953852, 0.3116110784489235, 0.3072184293428751))
                 ])
 img=transform1(inputs)
 img=img.unsqueeze(0) 
-img= Variable(img.cuda())
+img= Variable(img,requires_grad=False)
 
-label_num=11
-model = segnetmodel.segnet(label_num)
-model.load_state_dict(torch.load('segnet-4/net_params64.pkl'))  
-
-model=model.cuda()
-model.eval()
 outputs=model(img)
 
-pred = outputs.data.max(1)[1].cpu().numpy()
+pred = outputs.data.max(1)[1].numpy()
 pred=pred.squeeze(0) 
 pre = decode_segmap(pred)
 pre=np.uint8(pre)
@@ -81,9 +82,9 @@ plt.figure()
 plt.imshow(inputs)
 plt.axis('off')
 plt.figure()
-plt.imshow(pre)
+plt.imshow(truth)
 plt.axis('off')
 plt.figure()
-plt.imshow(truth)
+plt.imshow(pre)
 plt.axis('off')
 plt.show() 
