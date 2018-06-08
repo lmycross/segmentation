@@ -18,29 +18,6 @@ import os
 import datetime
 
 
-def get_1x_lr_params(model):
-    b = []
-
-    b.append(model.layer0.parameters())
-    b.append(model.layer1.parameters())
-    b.append(model.layer2.parameters())
-    b.append(model.layer3.parameters())
-    b.append(model.layer4.parameters())
-
-    for j in range(len(b)):
-        for i in b[j]:
-            yield i
-
-
-def get_10x_lr_params(model):
-    b = []
-    b.append(model.duc.parameters())
-
-    for j in range(len(b)):
-        for i in b[j]:
-            yield i
-
-
 class CrossEntropyLoss2d(nn.Module):
     def __init__(self, weight=None, size_average=True):
         super(CrossEntropyLoss2d, self).__init__()

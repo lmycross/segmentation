@@ -189,10 +189,6 @@ def main(train_args):
                             {'params': get_10x_lr_params(model),'lr':lr_}
                             ],momentum=train_args.momentum,weight_decay=train_args.weight_decay)
         
-#    optimizer.param_groups[0]['lr'] = lr_
-#    optimizer.param_groups[1]['lr'] = lr_*10
-    
-    
     
     if train_args.load_param is not None:
         model.load_state_dict(torch.load(train_args.load_param))  
